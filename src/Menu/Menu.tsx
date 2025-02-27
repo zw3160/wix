@@ -21,7 +21,7 @@ const Menu: React.FC = () => {
     }, [menu]);
 
     const addDefaultItem = () => {
-        const newItem: MenuNode = { id: Date.now(), name: 'Default Item', children: [] };
+        const newItem: MenuNode = { id: Date.now(), name: 'root item', children: [] };
         setMenu(prevMenu => [...prevMenu, newItem]);
     };
 
