@@ -1,0 +1,23 @@
+.menu-item {
+  padding: 10px;
+  margin: 5px 0;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 220px; /* Set a fixed width for menu items */
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.menu-item:hover {
+  box-shadow: 0 2px 8px darkgray 
+}
+
+.menu-item:not(.submenu .menu-item) {
+  background-color: gainsboro; 
+}
+
+.submenu {
+  padding-left: 20px;
+  margin-top: 5px;
+}

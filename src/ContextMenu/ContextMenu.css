@@ -1,0 +1,23 @@
+.context {
+    border: none;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 10px;
+    width: 180px; /* Set a fixed width for context menu */
+    position: absolute;
+    z-index: 1000;
+}
+
+.context div {
+    padding: 12px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.context div:hover {
+    background-color: #007BFF; /* Highlight on hover */
+    color: white; /* Change text color on hover */
+    transform: translateY(-2px); /* Slight lift effect */
+}
