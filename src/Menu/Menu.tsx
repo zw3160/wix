@@ -60,11 +60,22 @@ const Menu: React.FC = () => {
     };
 
     const deleteById = (items: MenuNode[], id: number): MenuNode[] => {
-        return items.filter(item => item.id !== id).map(item => ({
-            ...item,
-            children: deleteById(item.children, id),
-        }));
-    };
+        return items.reduce((acc: MenuNode[], item: MenuNode) => {
+            if (item.id === id) {
+                return acc;
+            }
+    
+            const updatedChildren = deleteById(item.children, id);
+            
+            if (updatedChildren.length !== item.children.length) {
+                acc.push({ ...item, children: updatedChildren });
+            } else {
+                acc.push(item);
+            }
+    
+            return acc;
+        }, []);
+    }; 
 
     return (
         <div>

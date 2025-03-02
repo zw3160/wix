@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import './MenuItem.css';
 
@@ -20,6 +20,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
     const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
     const [isRenaming, setIsRenaming] = useState(false);
     const [newName, setNewName] = useState(item.name);
+    const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const contextMenuRef = useRef<HTMLDivElement | null>(null);
 
     const handleRightClick = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -47,8 +49,27 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
     };
 
     const handleToggleChildren = () => {
-        setIsOpen(!isOpen);
+        if (clickTimeoutRef.current) {
+            clearTimeout(clickTimeoutRef.current);
+        }
+
+        clickTimeoutRef.current = setTimeout(() => {
+            setIsOpen(prev => !prev);
+        }, 200); 
     };
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (contextMenuRef.current && !contextMenuRef.current.contains(event.target as Node)) {
+                setContextMenu(null);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, []);
 
     return (
         <div>
@@ -63,12 +84,14 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
                 )}
             </div>
             {contextMenu && (
-                <ContextMenu
-                    onAdd={handleAdd}
-                    onRename={handleRename}
-                    onDelete={handleDelete}
-                    onClose={() => setContextMenu(null)}
-                />
+                <div ref={contextMenuRef}>
+                    <ContextMenu
+                        onAdd={handleAdd}
+                        onRename={handleRename}
+                        onDelete={handleDelete}
+                        onClose={() => setContextMenu(null)}
+                    />
+                </div>
             )}
             {isOpen && item.children.length > 0 && (
                 <div className="submenu">
