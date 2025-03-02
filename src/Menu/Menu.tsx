@@ -16,12 +16,12 @@ const Menu: React.FC = () => {
     }, [menu]);
 
     const addDefaultItem = () => {
-        const newItem: MenuNode = { id: Date.now(), name: 'set menu name', children: [], isRenaming: true };
+        const newItem: MenuNode = { id: Date.now(), name: 'Menu', children: [] };
         setMenu(prevMenu => [...prevMenu, newItem]);
     };
 
     const addSubmenu = (parentId: number) => {
-        const newItem: MenuNode = { id: Date.now(), name: 'New Item', children: [], isRenaming: true };
+        const newItem: MenuNode = { id: Date.now(), name: '', children: []};
         const updatedMenu = addItem(menu, parentId, newItem);
         setMenu(updatedMenu);
     };
@@ -77,10 +77,11 @@ const Menu: React.FC = () => {
             <div className="centered-button-container">
                 <button className="create-menu-button" onClick={addDefaultItem}>Create Menu</button>
             </div>
-            
+            <div className='menus-container'>
             {menu.map(item => (
                 <MenuItem key={item.id} item={item} onAdd={addSubmenu} onRename={renameItem} onDelete={deleteItem} />
             ))}
+            </div>
         </div>
     );
 };

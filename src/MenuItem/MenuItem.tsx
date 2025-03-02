@@ -6,8 +6,9 @@ import './MenuItem.css';
 const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [contextMenu, setContextMenu] = useState<{ x: number; y: number } | null>(null);
-    const [isRenaming, setIsRenaming] = useState(false);
+    const [isRenaming, setIsRenaming] = useState(!item.name);
     const [newName, setNewName] = useState(item.name);
+    const [nameError, setNameError] = useState('');
     const clickTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const contextMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -19,10 +20,10 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
     const handleAdd = () => {
         onAdd(item.id);
         setContextMenu(null);
+        setIsOpen(true);
     };
 
     const handleRename = () => {
-        console.log('111 handleRename true')
         setIsRenaming(true);
         setContextMenu(null);
     };
@@ -34,12 +35,20 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
 
     const handleRenameSubmit = () => {
         console.log('222 handleRename false')
-        onRename(item.id, newName);
-        setIsRenaming(false);
+        if (!newName.trim()) {
+            setNameError('name is mandatory');
+        } else {
+            onRename(item.id, newName);
+            setIsRenaming(false);
+        }
     };
+
+    const handleNameInput = (value: string) => {
+        setNameError('');
+        setNewName(value);
+    }
     
     const handleRenameCancel = () => {
-        console.log('333 handleRename false')
         setNewName(item.name); 
         setIsRenaming(false);
     };
@@ -68,16 +77,22 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
     }, []);
 
     return (
-        <div>
-            <div className="menu-item" onContextMenu={handleRightClick} onClick={handleToggleChildren}>
+        <div id={item.id.toString()}>
+            <div className="menu-item" onClick={handleToggleChildren}>
             {isRenaming ? (
                 <div>
-                    <input value={newName} onChange={(e) => setNewName(e.target.value)} />
-                    <button onClick={handleRenameSubmit}>Submit</button>
-                    <button onClick={handleRenameCancel}>Cancel</button>
+                    <input value={newName} onChange={(e) => handleNameInput(e.target.value)} minLength={1} placeholder='Enter name'/>
+                    {nameError && <span className='span-error'>{nameError}</span>}
+                    <div className='button-container'>
+                        <button onClick={handleRenameSubmit}>Submit</button>
+                        <button onClick={handleRenameCancel} disabled={!item.name}>Cancel</button>
+                    </div>
                 </div>
             ) : (
-                <span>{item.name} {item.children.length > 0 && (isOpen ? '[-]' : '[+]')}</span>
+                <div>
+                    <span>{item.name} {item.children.length > 0 && (isOpen ? '[-]' : '[+]')}</span>
+                    <div className='context-item' onClick={handleRightClick}>...</div>
+                </div>
             )}
             </div>
             {contextMenu && (

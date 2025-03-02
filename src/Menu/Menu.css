@@ -16,3 +16,9 @@
 .create-menu-button:active {
     transform: scale(0.95); 
 }
+
+.menus-container {
+    display: flex; 
+    flex-wrap: nowrap; 
+    gap: 10px; 
+  }

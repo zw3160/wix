@@ -5,19 +5,39 @@
   border: 1px solid #ddd;
   border-radius: 4px;
   cursor: pointer;
-  width: 220px; /* Set a fixed width for menu items */
+  width: 220px; 
   transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+}
+
+.context-item {
+  position: absolute; 
+  right: 10px; 
+  top: 50%; 
+  transform: translateY(-50%); 
 }
 
 .menu-item:hover {
-  box-shadow: 0 2px 8px darkgray 
+  box-shadow: 0 2px 8px darkgray;
 }
 
 .menu-item:not(.submenu .menu-item) {
-  background-color: gainsboro; 
+  background-color: gainsboro;
 }
 
 .submenu {
   padding-left: 20px;
   margin-top: 5px;
+}
+
+.span-error {
+  color: red; 
+  font-size: 10px; 
+  display: block;
+}
+
+.button-container {
+  display: flex; 
+  gap: 10px; 
+  justify-content: flex-end;
 }
