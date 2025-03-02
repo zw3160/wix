@@ -1,19 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { MenuItemProps } from '../types';
 import ContextMenu from '../ContextMenu/ContextMenu';
 import './MenuItem.css';
-
-interface MenuItemProps {
-    item: MenuNode;
-    onAdd: (parentId: number) => void;
-    onRename: (id: number, newName: string) => void;
-    onDelete: (id: number) => void;
-}
-
-interface MenuNode {
-    id: number;
-    name: string;
-    children: MenuNode[];
-}
 
 const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -34,6 +22,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
     };
 
     const handleRename = () => {
+        console.log('111 handleRename true')
         setIsRenaming(true);
         setContextMenu(null);
     };
@@ -44,7 +33,14 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
     };
 
     const handleRenameSubmit = () => {
+        console.log('222 handleRename false')
         onRename(item.id, newName);
+        setIsRenaming(false);
+    };
+    
+    const handleRenameCancel = () => {
+        console.log('333 handleRename false')
+        setNewName(item.name); 
         setIsRenaming(false);
     };
 
@@ -74,14 +70,15 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAdd, onRename, onDelete }) 
     return (
         <div>
             <div className="menu-item" onContextMenu={handleRightClick} onClick={handleToggleChildren}>
-                {isRenaming ? (
-                    <div>
-                        <input value={newName} onChange={(e) => setNewName(e.target.value)} />
-                        <button onClick={handleRenameSubmit}>Submit</button>
-                    </div>
-                ) : (
-                    <span>{item.name} {item.children.length > 0 && (isOpen ? '[-]' : '[+]')}</span>
-                )}
+            {isRenaming ? (
+                <div>
+                    <input value={newName} onChange={(e) => setNewName(e.target.value)} />
+                    <button onClick={handleRenameSubmit}>Submit</button>
+                    <button onClick={handleRenameCancel}>Cancel</button>
+                </div>
+            ) : (
+                <span>{item.name} {item.children.length > 0 && (isOpen ? '[-]' : '[+]')}</span>
+            )}
             </div>
             {contextMenu && (
                 <div ref={contextMenuRef}>
